@@ -10,6 +10,7 @@ a.active hr {
 
 * {
   font-family: Outfit;
+  scroll-behavior: smooth;
 }
 
 .prata-regular {
