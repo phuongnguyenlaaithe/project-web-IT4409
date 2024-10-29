@@ -15,7 +15,7 @@ const Order = () => {
       <div>
         {
           products.slice(0,4).map((item, index) => (
-            <div className="border-t border-b py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div key={index} className="border-t border-b py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex items-start gap-6 text-sm">
                   <img src={item.image[0]} alt=""  className="w-16 sm:w-20"/>
                   <div className="flex flex-col gap-1">
