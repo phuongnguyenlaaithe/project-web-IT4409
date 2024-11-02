@@ -13,6 +13,7 @@ import Footer from './components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Favourite from './pages/Favourite'
+import ChatBox from './components/chat'
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/placeorder" element={<PlaceOrder />} />
         <Route path="/favourite" element={<Favourite />} />
       </Routes>
+      <ChatBox />
       <Footer />
     </div>
   )
