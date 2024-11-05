@@ -8,6 +8,7 @@ import connectCloudinary from './config/cloudinary.js';
 import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
+import orderRouter from './routes/orderRoute.js';
 import favouriteListRouter from './routes/favouriteListRouter.js';
 import { handleConnection } from './controllers/chatController.js';
 
@@ -40,6 +41,7 @@ app.use('/api/users', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/favourite', favouriteListRouter);
+app.use('/api/order', orderRouter);
 
 // WebSocket Connection
 io.on('connection', (socket) => handleConnection(socket, io));
