@@ -6,7 +6,7 @@ import RelatedProducts from '../components/RelatedProducts';
 
 const Product = () => {
   const { id } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, addToFavourite } = useContext(ShopContext);
 
   const [product, setProduct] = useState(false);
   const [image, setImage] = useState('');
@@ -26,7 +26,7 @@ const Product = () => {
     fetchData();
     setSize('');
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [id, products]);
 
   return product ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -79,12 +79,20 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button
-            onClick={() => addToCart(product._id, size)}
-            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
-          >
-            ADD TO CART
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={() => addToCart(product._id, size)}
+              className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+            >
+              ADD TO CART
+            </button>
+            <button
+              onClick={() => addToFavourite(product._id, size)}
+              className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+            >
+              ADD TO FAVOURITE
+            </button>
+          </div>
           <hr className="my-8 sm:w-4/5" />
           <div className="flex flex-col gap-1 text-gray-500 text-sm ">
             <p>100% Original product.</p>

@@ -29,7 +29,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/order" element={<Order />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/placeorder" element={<PlaceOrder />} />
+        <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/favourite" element={<Favourite />} />
       </Routes>
       <ChatBox />
