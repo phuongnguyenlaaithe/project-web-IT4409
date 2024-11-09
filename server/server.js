@@ -10,6 +10,7 @@ import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import favouriteListRouter from './routes/favouriteListRouter.js';
+import revenueRouter from './routes/revenueRoute.js';
 import { handleConnection } from './controllers/chatController.js';
 
 // App Config
@@ -42,6 +43,7 @@ app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/favourite', favouriteListRouter);
 app.use('/api/order', orderRouter);
+app.use('/api/revenue', revenueRouter);
 
 // WebSocket Connection
 io.on('connection', (socket) => handleConnection(socket, io));
