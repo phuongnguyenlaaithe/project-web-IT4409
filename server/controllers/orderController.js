@@ -1,7 +1,16 @@
+import axios from 'axios';
+import crypto from 'crypto';
 import orderModel from '../models/orderModel.js'; // Adjust path as needed
 import userModel from '../models/userModel.js';
 
-
+const momoConfig = {
+    partnerCode: process.env.MOMO_PARTNER_CODE,
+    accessKey: process.env.MOMO_ACCESS_KEY,
+    secretKey: process.env.MOMO_SECRET_KEY,
+    endpoint: 'https://test-payment.momo.vn/v2/gateway/api/create',
+    returnUrl: 'http://localhost:5173/order',
+    notifyUrl: 'https://a67e-2a09-bac1-7aa0-50-00-245-8.ngrok-free.app/api/order/verify'
+  };
 
 // Placing orders using COD Method
 const placeOrder = async (req, res) => {
@@ -71,10 +80,95 @@ const updateStatus = async (req, res) => {
     }
 };
 
+// Place order using Momo payment method
+const placeOrderMomo = async (req, res) => {
+    try {
+      const { userId, items, amount, address } = req.body;
+  
+      const orderData = {
+        userId,
+        items,
+        address,
+        amount,
+        paymentMethod: 'Momo',
+        payment: false,
+        date: Date.now()
+      };
+  
+      const newOrder = new orderModel(orderData);
+      await newOrder.save();
+  
+      const requestId = `${newOrder._id}-${Date.now()}`;
+      const orderId = newOrder._id.toString();
+      const orderInfo = 'Payment for order ' + orderId;
+      const requestType = 'payWithATM';
+      const extraData = '';
+      const exchangeRate = 25000;
+      const VNDamount = amount * exchangeRate;
+  
+      const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${VNDamount}&extraData=${extraData}&ipnUrl=${momoConfig.notifyUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.returnUrl}&requestId=${requestId}&requestType=${requestType}`;
+      const signature = crypto.createHmac('sha256', momoConfig.secretKey)
+        .update(rawSignature)
+        .digest('hex');
+  
+      const momoRequest = {
+        partnerCode: momoConfig.partnerCode,
+        partnerName: 'TEST',
+        storeId: 'TESTMOMO',
+        requestId,
+        amount: VNDamount.toString(),
+        orderId,
+        orderInfo,
+        redirectUrl: momoConfig.returnUrl,
+        ipnUrl: momoConfig.notifyUrl,
+        lang: 'vi',
+        requestType,
+        autoCapture: true,
+        extraData,
+        orderGroupId: '',
+        signature,
+      };
+      
+      const momoResponse = await axios.post(momoConfig.endpoint, momoRequest);
+  
+      if (momoResponse.data.resultCode === 0) {
+        res.json({ success: true, payUrl: momoResponse.data.payUrl });
+      } else {
+        res.json({ success: false, message: momoResponse.data.localMessage });
+      }
+    } catch (error) {
+      console.log(error);
+      res.json({ success: false, message: error.message });
+    }
+};
+
+// verify payment from Momo
+const verifyMoMoPayment = async (req, res) => {
+    const {orderId, resultCode } = req.body;
+    try {
+        if (resultCode === 0) {
+            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            //find user id from order id
+            const order = await orderModel.findById(orderId);
+            const userId = order.userId;
+            //clear cart data
+            await userModel.findByIdAndUpdate(userId, { cartData: {} });
+            res.json({ success: true, message: 'Payment Successful' });
+        } else {
+            res.json({ success: false, message: 'Payment Failed' });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
 
 export {
     placeOrder,
+    placeOrderMomo,
     allOrders,
     userOrders,
-    updateStatus
+    updateStatus,
+    verifyMoMoPayment
 };
