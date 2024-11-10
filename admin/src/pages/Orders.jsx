@@ -14,7 +14,7 @@ const Orders = ({token}) => {
     }
 
     try {
-      const res = await axios.get(backendUrl + '/api/order/list',{headers: { token } })
+      const res = await axios.get(backendUrl + '/api/order/list',{ headers: { token } })
 
       if(res.statusText === 'OK') {
         setOrders(res.data)
