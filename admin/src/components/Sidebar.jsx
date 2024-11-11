@@ -17,8 +17,18 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to='/orders'>
-          <img className='w-5 h-5' src={assets.order_icon} alt="" />
+          <img className='w-5 h-5' src={assets.cart_icon} alt="" />
           <p className='hidden sm:block'>Orders</p>
+        </NavLink>
+
+        <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to='/chat'>
+          <img className='w-5 h-5' src={assets.msg_icon} alt="" />
+          <p className='hidden sm:block'>Chat</p>
+        </NavLink>
+
+        <NavLink className='flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l' to='/revenue'>
+          <img className='w-5 h-5' src={assets.revenue_icon} alt="" />
+          <p className='hidden sm:block'>Revenue</p>
         </NavLink>
       </div>
     </div>

@@ -14,7 +14,7 @@ const Orders = ({token}) => {
     }
 
     try {
-      const res = await axios.get(backendUrl + '/api/order/list',{headers: { token } })
+      const res = await axios.get(backendUrl + '/api/order/list',{ headers: { token } })
 
       if(res.statusText === 'OK') {
         setOrders(res.data)
@@ -63,7 +63,12 @@ const Orders = ({token}) => {
                     }
                   })}
                 </div>
-                <p>{order.address}</p>
+                <p className='my-3 font-medium'>{order.address.firstName + " " + order.address.lastName}</p>
+                <div>
+                  <p>{order.address.stress + ", "}</p>
+                  <p>{order.address.city + ", " + order.address.state + ", " + order.address.country + ", " + order.address.zipcode}</p>
+                </div>
+                <p>{order.address.phone}</p>
               </div>
               <div>
                 <p className='text-sm sm:text-base'>Items : {order.items.length}</p>
