@@ -42,7 +42,7 @@ const PlaceOrder = () => {
         try {
           const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay', response, { headers: { token } });
           if (data.success) {
-            navigate('/orders');
+            navigate('/order');
             setCartItems({});
           }
         } catch (error) {
@@ -85,7 +85,7 @@ const PlaceOrder = () => {
           const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: { token } });
           if (response.data.success) {
             setCartItems({});
-            navigate('/orders');
+            navigate('/order');
           } else {
             toast.error(response.data.message);
           }
