@@ -1,5 +1,4 @@
 import orderModel from '../models/orderModel.js';
-import productModel from '../models/productModel.js';
 
 // get revenue data for every month in a year
 const getRevenueByMonth = async (req, res) => {
