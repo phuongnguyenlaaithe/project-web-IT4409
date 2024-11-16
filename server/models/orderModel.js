@@ -16,24 +16,6 @@ const orderItemSchema = new mongoose.Schema({
     quantity: { type: Number, required: true }
 });
 
-orderItemSchema.pre('save', async function(next) {
-    if (this.isModified('_id')) {
-        const product = await productModel.findById(this._id);
-        if (product) {
-            this.name = product.name;
-            this.description = product.description;
-            this.price = product.price;
-            this.image = product.image;
-            this.category = product.category;
-            this.subCategory = product.subCategory;
-            this.sizes = product.sizes;
-            this.bestseller = product.bestseller;
-            this.date = product.date;
-        }
-    }
-    next();
-});
-
 const addressSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
