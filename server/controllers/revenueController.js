@@ -9,7 +9,12 @@ const getRevenueByMonth = async (req, res) => {
         let revenue = Array(12).fill(0);
         orders.forEach(order => {
             const month = new Date(order.date).getMonth();
-            revenue[month] += order.amount;
+            order.items.forEach(item => {
+                if (!revenue[month]) {
+                    revenue[month] = 0;
+                }
+                revenue[month] += item.quantity * item.price;
+            });
         });
         res.json({ success: true, revenue });
     } catch (error) {
@@ -20,39 +25,39 @@ const getRevenueByMonth = async (req, res) => {
 // get revenue data for every category in all years by query all orders
 const getRevenueByCategory = async (req, res) => {
     try {
-        const products = await productModel.find({});
         const orders = await orderModel.find({});
         let revenue = {};
-        products.forEach(product => {
-            revenue[product.category] = 0;
-        });
+
         orders.forEach(order => {
             order.items.forEach(item => {
-                const product = products.find(product => product._id.toString() === item.productId);
-                revenue[product.category] += item.quantity * product.price;
+                if (!revenue[item.category]) {
+                    revenue[item.category] = 0;
+                }
+                revenue[item.category] += item.quantity * item.price;
             });
         });
+
         res.json({ success: true, revenue });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
 };
 
-//get revenue data for every subcategory in all years by query all orders
+// get revenue data for every subcategory in all years by query all orders
 const getRevenueBySubCategory = async (req, res) => {
     try {
-        const products = await productModel.find({});
         const orders = await orderModel.find({});
         let revenue = {};
-        products.forEach(product => {
-            revenue[product.subCategory] = 0;
-        });
+
         orders.forEach(order => {
             order.items.forEach(item => {
-                const product = products.find(product => product._id.toString() === item.productId);
-                revenue[product.subCategory] += item.quantity * product.price;
+                if (!revenue[item.subCategory]) {
+                    revenue[item.subCategory] = 0;
+                }
+                revenue[item.subCategory] += item.quantity * item.price;
             });
         });
+
         res.json({ success: true, revenue });
     } catch (error) {
         res.json({ success: false, message: error.message });
