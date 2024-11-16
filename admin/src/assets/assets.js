@@ -7,6 +7,8 @@ import chat_icon from './chat.png'
 import msg_icon from './message.png'
 import cart_icon from './shopping-cart.png'
 import revenue_icon from './promotion.png'
+import avatar_man from './man.png'
+import avatar_woman from './woman.png'
 
 export const assets = {
     logo,
@@ -17,6 +19,8 @@ export const assets = {
     chat_icon,
     msg_icon,
     cart_icon,
-    revenue_icon
+    revenue_icon,
+    avatar_man,
+    avatar_woman
 }
 
