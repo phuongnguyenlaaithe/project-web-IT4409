@@ -1,7 +1,7 @@
 import productModel from "../models/productModel.js";
 import orderModel from '../models/orderModel.js';
 
-export async function updateBestSellers() {
+export async function updateBestSellers(req, res, next) {
     // Tính tổng số lượng đặt hàng cho từng sản phẩm
     const topProducts = await orderModel.aggregate([
         { $unwind: "$items" }, // Tách từng sản phẩm trong mảng items
@@ -32,4 +32,5 @@ export async function updateBestSellers() {
     );
 
     console.log("Bestseller status updated!");
+    next();
 }
