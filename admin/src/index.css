@@ -17,3 +17,7 @@ select,input,textarea {
   background: #ffebf5 ;
   border-color: #c586a5 ;
 }
+
+.hidden_scroll::-webkit-scrollbar {
+  display: none;
+}
