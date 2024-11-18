@@ -87,7 +87,7 @@ const Product = () => {
               ADD TO CART
             </button>
             <button
-              onClick={() => addToFavourite(product._id, size)}
+              onClick={() => addToFavourite(product._id)}
               className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
             >
               ADD TO FAVOURITE
