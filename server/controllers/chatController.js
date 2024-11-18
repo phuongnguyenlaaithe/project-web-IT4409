@@ -1,7 +1,7 @@
 import ChatMessage from '../models/chatModel.js';
 
 const handleConnection = (socket, io) => {
-//   console.log('a user connected');
+  //   console.log('a user connected');
 
   // Listen for the join event to send previous messages
   socket.on('join', async ({ userId, adminId }) => {
@@ -30,9 +30,9 @@ const handleConnection = (socket, io) => {
     });
   });
 
-//   socket.on('disconnect', () => {
-//     console.log('user disconnected');
-//   });
+  //   socket.on('disconnect', () => {
+  //     console.log('user disconnected');
+  //   });
 };
 
 export { handleConnection };

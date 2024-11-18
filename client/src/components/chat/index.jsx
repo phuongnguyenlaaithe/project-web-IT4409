@@ -1,11 +1,14 @@
-import { useCallback, useMemo, useState } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { io } from 'socket.io-client';
 import { assets } from '../../assets/assets';
-import ConversationBox from './conversation';
+
+const socket = io('http://localhost:4000'); // Adjust server URL if needed
 
 const ChatBox = () => {
   const [isActive, setIsActive] = useState(false);
   const [enterMessage, setEnterMessage] = useState('');
   const [showConversation, setShowConversation] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const onShowConversation = useCallback(() => {
     setShowConversation(true);
@@ -27,9 +30,36 @@ const ChatBox = () => {
     return enterMessage.length > 0;
   }, [enterMessage]);
 
-  const handleSend = useCallback(() => {
-    onShowConversation();
+  // Fetch previous messages and handle real-time messages
+  useEffect(() => {
+    socket.emit('join', { userId: '6738af64957c4debb2f7235a', adminId: 'admin' }); // Replace with dynamic IDs
+
+    socket.on('previousMessages', (msgs) => {
+      setMessages(msgs);
+    });
+
+    socket.on('privateMessage', (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socket.off('previousMessages');
+      socket.off('privateMessage');
+    };
   }, []);
+
+  const handleSend = useCallback(() => {
+    if (enterMessage.length > 0) {
+      const newMessage = {
+        sender: '6738af64957c4debb2f7235a', // Replace with actual sender ID
+        receiver: 'admin', // Replace with actual receiver ID
+        message: enterMessage,
+        timestamp: new Date(),
+      };
+      socket.emit('privateMessage', newMessage);
+    }
+    setEnterMessage(''); // Clear input after sending
+  }, [enterMessage]);
 
   if (showConversation) {
     return (
@@ -40,26 +70,29 @@ const ChatBox = () => {
             <p className="text-white text-base font-bold text-center">Semir</p>
             <div className="text-black">hi</div>
           </div>
-          <div className="flex-1 h-[164px] p-4">
-            <div className="flex justify-end">
-              <div className="bg-black text-white text-sm p-2 rounded max-w-52">
-                <p>Đây là đơn hàng của tôi</p>
-                <span className="text-xs text-gray-100">02:12</span>
+          <div className="flex-1 h-[164px] p-4 overflow-y-auto" >
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`mb-1 flex ${msg.sender === '6738af64957c4debb2f7235a' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`${msg.sender === '6738af64957c4debb2f7235a' ? 'bg-black text-white' : 'bg-gray-200 text-black'
+                    } text-sm p-2 rounded max-w-[70%] break-words`}
+                >
+                  <p>{msg.message}</p>
+                  <span className="text-xs text-gray-400 block mt-1">{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex justify-start mt-2">
-              <div className="bg-gray-200 text-black text-sm p-2 rounded max-w-52">
-                <p>Đây là đơn hàng của tôi</p>
-                <span className="text-xs text-black">02:12</span>
-              </div>
-            </div>
+            ))}
           </div>
+
           <div className="p-2">
             <div className="w-full border h-16 rounded bg-white mt-4 p-2">
               <input
+                value={enterMessage}
                 onChange={(e) => setEnterMessage(e.target.value)}
-                placeholder="Enter your mesage..."
+                placeholder="Enter your message..."
                 className="text-sm border-0 outline-none w-full focus:ring-0 hover:border-gray-300"
               />
               <div
@@ -103,7 +136,7 @@ const ChatBox = () => {
           <div className="w-full border h-16 rounded bg-white mt-4 p-2">
             <input
               onChange={(e) => setEnterMessage(e.target.value)}
-              placeholder="Enter your mesage..."
+              placeholder="Enter your message..."
               className="text-sm border-0 outline-none w-full focus:ring-0 hover:border-gray-300"
             />
             <div
@@ -117,7 +150,7 @@ const ChatBox = () => {
         <div onClick={onShowConversation} className="flex h-2/4 flex-col justify-center p-4 gap-4">
           <p className="text-center">Câu hỏi tức thì</p>
           <div className="cursor-pointer border border-gray-500 text-gray-400 hover:opacity-70 rounded p-2">
-            Theo dõi đơn hàng của tôi
+            Theo dõi tin nhắn của tôi
           </div>
         </div>
       </div>

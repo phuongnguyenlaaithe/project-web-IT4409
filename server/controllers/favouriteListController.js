@@ -1,4 +1,5 @@
 import userModel from '../models/userModel.js';
+import productModel from '../models/productModel.js';
 
 //add products to user favourite list
 const addToFavourite = async (req, res) => {
@@ -14,7 +15,7 @@ const addToFavourite = async (req, res) => {
             favoriteProducts.push(productId)
             await userModel.findByIdAndUpdate(userId, { favoriteProducts })
 
-            res.json({ success: true, message: "Added To Favourite" })
+            res.json({ success: true, message: "Added To Favourite", favouriteProduct: await productModel.findOne({ _id: productId }) })
         }
     } catch (error) {
         console.log(error)
@@ -25,7 +26,8 @@ const addToFavourite = async (req, res) => {
 //delete products from user favourite list
 const deleteFromFavourite = async (req, res) => {
     try {
-        const { userId, productId } = req.body
+        const { productId } = req.query
+        const { userId } = req.body
 
         const userData = await userModel.findById(userId)
         let favoriteProducts = await userData.favoriteProducts;

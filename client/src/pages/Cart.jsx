@@ -5,7 +5,7 @@ import { assets } from '../assets/assets';
 import CartTotal from '../components/CartTotal';
 
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
+  const { products, currency, cartItems, updateQuantity, navigate, addToFavourite } = useContext(ShopContext);
 
   const [cartData, setCartData] = useState([]);
 
@@ -46,7 +46,7 @@ const Cart = () => {
               key={index}
               className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
             >
-              <div className=" flex items-start gap-6">
+              <div className=" flex items-start gap-6" style={{ cursor: "pointer" }} onClick={() => { window.location.pathname = `/product/${item._id}` }}>
                 <img className="w-16 sm:w-20" src={productData.image[0]} alt="" />
                 <div>
                   <p className="text-xs sm:text-lg font-medium">{productData.name}</p>
@@ -70,12 +70,21 @@ const Cart = () => {
                 min={1}
                 defaultValue={item.quantity}
               />
-              <img
-                onClick={() => updateQuantity(item._id, item.size, 0)}
-                className="w-4 mr-4 sm:w-5 cursor-pointer"
-                src={assets.bin_icon}
-                alt=""
-              />
+              <div className="flex">
+                <img
+                  onClick={() => addToFavourite(item._id)}
+                  className="w-6 mr-6 sm:w-6 cursor-pointer"
+                  src={assets.favoriteIcon}
+                  alt=""
+                />
+                <img
+                  onClick={() => updateQuantity(item._id, item.size, 0)}
+                  className="w-4 mr-4 sm:w-5 cursor-pointer"
+                  src={assets.bin_icon}
+                  alt=""
+                />
+              </div>
+
             </div>
           );
         })}
