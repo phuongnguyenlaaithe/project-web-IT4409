@@ -35,4 +35,14 @@ const handleConnection = (socket, io) => {
   //   });
 };
 
-export { handleConnection };
+// get the list of users who have chatted with the admin
+const getUsers = async (req, res) => {
+  try {
+    const users = await ChatMessage.distinct('sender', { receiver: "admin" });
+    res.json({ success: true, users });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { handleConnection, getUsers };
