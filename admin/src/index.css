@@ -7,6 +7,10 @@
   font-family: Outfit
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 select,input,textarea {
   border: 1px solid #c2c2c2;
   outline-color: #c586a5 ;
