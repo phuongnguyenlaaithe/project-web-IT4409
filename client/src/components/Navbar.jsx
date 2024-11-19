@@ -6,12 +6,13 @@ import { ShopContext } from '../context/ShopContext';
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
-  const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems, setFavouriteItems, getFavouriteCount } = useContext(ShopContext);
+  const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems, setFavouriteItems, getFavouriteCount, setUserId } = useContext(ShopContext);
 
   const logout = () => {
     navigate('/login');
     localStorage.removeItem('token');
     setToken('');
+    setUserId('');
     setCartItems({});
     setFavouriteItems({});
   };
@@ -63,7 +64,7 @@ const Navbar = () => {
           {token && (
             <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
               <div className="flex flex-col gap-2 w-36 py-3 px-5  bg-slate-100 text-gray-500 rounded">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
+                {/* <p className="cursor-pointer hover:text-black">My Profile</p> */}
                 <p onClick={() => navigate('/order')} className="cursor-pointer hover:text-black">
                   Orders
                 </p>
@@ -74,26 +75,25 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <Link to="/cart" className="relative">
+        <Link to={token ? "/cart" : "/login"} className="relative">
           <img src={assets.cart_icon} className="w-5 min-w-5" alt="" />
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+          {token && <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
             {getCartCount()}
-          </p>
+          </p>}
         </Link>
-        <Link to="/favourite" className="relative">
+        <Link to={token ? "/favourite" : "/login"} className="relative">
           <img src={assets.favoriteIcon} className="w-7 object-cover" alt="" />
-          <p className="absolute right-[-2px] bottom-[-3px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+          {token && <p className="absolute right-[-2px] bottom-[-3px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
             {getFavouriteCount()}
-          </p>
+          </p>}
         </Link>
         <img onClick={() => setVisible(true)} src={assets.menu_icon} className="w-5 cursor-pointer sm:hidden" alt="" />
       </div>
 
       {/* Sidebar menu for small screens */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
-          visible ? 'w-full' : 'w-0'
-        }`}
+        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'
+          }`}
       >
         <div className="flex flex-col text-gray-600">
           <div onClick={() => setVisible(false)} className="flex items-center gap-4 p-3 cursor-pointer">

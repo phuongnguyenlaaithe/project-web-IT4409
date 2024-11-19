@@ -31,34 +31,53 @@ const Order = () => {
       {/* Danh sách đơn hàng */}
       <div className="space-y-4 mt-6">
         {orders.map((order) => (
+          // order.items.map(item => 
           <div
             key={order._id}
             className="p-4 bg-white shadow rounded-md flex justify-between items-center"
+            style={{ minWidth: "400px" }}
           >
-            <div>
-              <p>
-                <strong>Order ID:</strong> {order._id}
-              </p>
-              <p>
-                <strong>Total Amount:</strong> {currency}
-                {order.amount}
-              </p>
-              <p>
-                <strong>Status:</strong> {order.status}
-              </p>
-              <p>
-                <strong>Date:</strong>{" "}
-                {new Date(order.date).toLocaleDateString()}
-              </p>
+            <div className="flex items-center" style={{ width: "400px" }}>
+              <img
+                // src={item.image[0]}
+                // alt={item.name}
+                src={order.items[0].image[0]}
+                alt={order.items[0].name}
+                className="w-20 h-30 object-cover rounded mr-2"
+              />
+              <div>
+                <p>
+                  <strong>Order ID:</strong> {order._id}
+                  {/* <strong>{item.name}</strong> */}
+                </p>
+                <p>
+                  <strong>Total Amount:</strong> {currency}
+                  {order.amount}
+                  {/* {`$${item.price} ` + " - " + ` Quantity: ${item.quantity} ` + " - " + ` Size: ${item.size}`} */}
+                </p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(order.date).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Payment:</strong>{" "}
+                  {order.paymentMethod}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div style={{ fontSize: '50px', color: 'green', marginRight: '8px' }}>&bull;</div><span style={{ color: 'black' }}>{order.status}</span>
             </div>
             <button
               onClick={() => openModal(order)}
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500"
+              className="border text-black px-4 py-2 rounded shadow hover:bg-gray-100"
             >
-              Detail
+              Track Order
             </button>
           </div>
-        ))}
+        ))
+          // )
+        }
       </div>
 
       {/* Modal hiển thị chi tiết */}

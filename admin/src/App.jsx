@@ -7,7 +7,7 @@ import Add from "./pages/Add"
 import { useEffect, useState } from "react"
 import Login from "./components/Login"
 
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Chat from "./pages/Chat"
 import Revenue from "./pages/Revenue"
@@ -18,35 +18,36 @@ export const currency = '$'
 
 const App = () => {
 
-  const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):'');
+  const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '');
 
   useEffect(() => {
     localStorage.setItem('token', token);
-  },[token])
+
+  }, [token])
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <ToastContainer/>
-      {token === '' 
-      ? <Login setToken={setToken}/>
-      :<>
-        <Navbar setToken={setToken}/>
-        <hr/>
-        <div className="flex w-full">
-          <Sidebar/>
-          <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
-            <Routes>
-              <Route path="/add" element={<Add token={token} />}/>
-              <Route path="/list" element={<List token={token} />}/>
-              <Route path="/orders" element={<Orders token={token} />}/>
-              <Route path="/chat" element={<Chat token={token} />}/>
-              <Route path="/revenue" element={<Revenue token={token} />}/>
-            </Routes>
+      <ToastContainer />
+      {token === ''
+        ? <Login setToken={setToken} />
+        : <>
+          <Navbar setToken={setToken} />
+          <hr />
+          <div className="flex w-full">
+            <Sidebar />
+            <div className="w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base">
+              <Routes>
+                <Route path="/add" element={<Add token={token} />} />
+                <Route path="/list" element={<List token={token} />} />
+                <Route path="/orders" element={<Orders token={token} />} />
+                <Route path="/chat" element={<Chat token={token} />} />
+                <Route path="/revenue" element={<Revenue token={token} />} />
+              </Routes>
+            </div>
           </div>
-        </div>
-      </>
+        </>
       }
-      
+
     </div>
   )
 }

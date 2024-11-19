@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { io } from 'socket.io-client';
 import { assets } from '../../assets/assets';
+import { ShopContext } from '../../context/ShopContext';
 
 const socket = io('http://localhost:4000'); // Adjust server URL if needed
 
 const ChatBox = () => {
+  const { userId } = useContext(ShopContext);
+
   const [isActive, setIsActive] = useState(false);
   const [enterMessage, setEnterMessage] = useState('');
   const [showConversation, setShowConversation] = useState(false);
@@ -32,7 +35,7 @@ const ChatBox = () => {
 
   // Fetch previous messages and handle real-time messages
   useEffect(() => {
-    socket.emit('join', { userId: '6738af64957c4debb2f7235a', adminId: 'admin' }); // Replace with dynamic IDs
+    socket.emit('join', { userId: userId, adminId: 'admin' }); // Replace with dynamic IDs
 
     socket.on('previousMessages', (msgs) => {
       setMessages(msgs);
@@ -46,12 +49,12 @@ const ChatBox = () => {
       socket.off('previousMessages');
       socket.off('privateMessage');
     };
-  }, []);
+  }, [userId]);
 
   const handleSend = useCallback(() => {
     if (enterMessage.length > 0) {
       const newMessage = {
-        sender: '6738af64957c4debb2f7235a', // Replace with actual sender ID
+        sender: userId, // Replace with actual sender ID
         receiver: 'admin', // Replace with actual receiver ID
         message: enterMessage,
         timestamp: new Date(),
@@ -74,10 +77,10 @@ const ChatBox = () => {
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`mb-1 flex ${msg.sender === '6738af64957c4debb2f7235a' ? 'justify-end' : 'justify-start'}`}
+                className={`mb-1 flex ${msg.sender === userId ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`${msg.sender === '6738af64957c4debb2f7235a' ? 'bg-black text-white' : 'bg-gray-200 text-black'
+                  className={`${msg.sender === userId ? 'bg-black text-white' : 'bg-gray-200 text-black'
                     } text-sm p-2 rounded max-w-[70%] break-words`}
                 >
                   <p>{msg.message}</p>
