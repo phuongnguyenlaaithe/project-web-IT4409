@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { assets } from "../assets/assets";
 import moment from "moment";
 import {io} from 'socket.io-client'; 
@@ -133,7 +133,26 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [socket, setSocket] = useState(null);  
-  const userId = '6737ddd58fc42fcee47cdbc3'
+  const userId = '6738af64957c4debb2f7235a';
+  const messageEndRef = useRef(null);  
+  const messagesContainerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current && messageEndRef.current) {
+      const container = messagesContainerRef.current;
+      const scrollHeight = container.scrollHeight;
+  
+      container.scrollTo({
+        top: scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, selectedUser]);
 
   useEffect(() => {  
     // Kết nối socket  
@@ -220,7 +239,7 @@ const Chat = () => {
               </div>
 
               {/* Messages Container */}
-              <div className="h-[480px] w-full overflow-y-auto p-4 space-y-4 hidden_scroll">
+              <div className="h-[480px] w-full overflow-y-auto p-4 space-y-4 hidden_scroll" ref={messagesContainerRef}>
                 {messages.map((msg, index) => (
                   <div
                     key={index}
@@ -244,55 +263,11 @@ const Chat = () => {
                       {msg.message}
                     </div>
                     <span className="text-xs text-gray-500 mt-1">
-                      {moment(msg.timestamp).format("HH:mm")}
+                      {moment(msg.timestamp).format("DD/MM HH:mm")}
                     </span>
                   </div>
                 ))}
-
-                {/* <div className={`flex flex-col max-w-[70%] self-start items-start`}>
-                  <div
-                    className={`px-4 py-2 rounded-lg bg-gray-200 text-gray-800`}
-                  >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-                    minima distinctio numquam necessitatibus!
-                  </div>
-                  <span className="text-xs text-gray-500 mt-1">
-                    {moment('2024-11-16T06:36:59.031+00:00').format("HH:mm")}
-                  </span>
-                </div>
-
-                <div className={`flex flex-col max-w-[70%] items-end float-end`}>
-                  <div
-                    className={`px-4 py-2 rounded-lg bg-pink-500 text-white`}
-                  >
-                   Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error ducimus tempora debitis vel earum aperiam cumque veritatis facilis itaque quod odio eum ad iste, incidunt non, laboriosam expedita, repellendus rerum ipsum ea. Neque animi aut quod ea veritatis nesciunt molestias.
-                  </div>
-                  <span className="text-xs text-gray-500 mt-1">
-                    {moment('2024-11-16T06:36:59.031+00:00').format("HH:mm")}
-                  </span>
-                </div>
-
-                <div className={`flex flex-col max-w-[70%] items-start self-start float-start`}>
-                  <div
-                    className={`px-4 py-2 rounded-lg bg-gray-200 text-gray-800`}
-                  >
-                   Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error ducimus tempora debitis vel earum aperiam cumque veritatis facilis itaque quod odio eum ad iste, incidunt non, laboriosam expedita, repellendus rerum ipsum ea. Neque animi aut quod ea veritatis nesciunt molestias.
-                  </div>
-                  <span className="text-xs text-gray-500 mt-1">
-                    {moment('2024-11-16T06:36:59.031+00:00').format("HH:mm")}
-                  </span>
-                </div>
-
-                <div className={`flex flex-col max-w-[70%] items-end float-end`}>
-                  <div
-                    className={`px-4 py-2 rounded-lg bg-pink-500 text-white`}
-                  >
-                   🔥Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error ducimus tempora debitis vel earum aperiam cumque veritatis facilis itaque quod odio eum ad iste, incidunt non, laboriosam expedita, repellendus rerum ipsum ea. Neque animi aut quod ea veritatis nesciunt molestias.
-                  </div>
-                  <span className="text-xs text-gray-500 mt-1">
-                    {moment('2024-11-16T06:36:59.031+00:00').format("HH:mm")}
-                  </span>
-                </div> */}
+                <div ref={messageEndRef} />
               </div>
 
               {/* Message Input */}
