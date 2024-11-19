@@ -50,7 +50,7 @@ const List = ({token}) => {
   },[])
 
   return (
-    <div>
+    <div className='my-8'>
       <p className='mb-2'>All Products List</p>
       <div className='flex flex-col gap-2'>
         {/* header list */}

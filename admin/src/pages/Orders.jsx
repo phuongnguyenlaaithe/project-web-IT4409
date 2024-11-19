@@ -46,7 +46,7 @@ const Orders = ({token}) => {
   },[token])
 
   return (
-    <div>
+    <div className='my-8'>
       <h3>Order List</h3>
       <div>
         {

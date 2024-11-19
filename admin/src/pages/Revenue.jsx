@@ -194,7 +194,7 @@ const Revenue = ({token}) => {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 sm:justify-between">
+    <div className="flex flex-col md:flex-row gap-4 sm:justify-between my-8">
       <div className="md:w-[66%] bg-white p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-700">Revenue Analytics</h2>

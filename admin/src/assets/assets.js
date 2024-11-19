@@ -10,6 +10,8 @@ import revenue_icon from './promotion.png'
 import avatar_man from './man.png'
 import avatar_woman from './woman.png'
 import send_icon from './send-message.png'
+import exit_icon from './exit.png'
+import profile_icon from './profile.png'
 
 export const assets = {
     logo,
@@ -23,6 +25,8 @@ export const assets = {
     revenue_icon,
     avatar_man,
     avatar_woman,
-    send_icon
+    send_icon,
+    exit_icon,
+    profile_icon
 }
 

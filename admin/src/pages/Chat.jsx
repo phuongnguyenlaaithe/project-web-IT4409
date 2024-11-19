@@ -128,7 +128,7 @@ const listUser = [
 ];
 
 const Chat = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(listUser[0]);
   const [users, setUsers] = useState();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -136,6 +136,7 @@ const Chat = () => {
   const userId = '6738af64957c4debb2f7235a';
   const messageEndRef = useRef(null);  
   const messagesContainerRef = useRef(null);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current && messageEndRef.current) {
@@ -176,6 +177,11 @@ const Chat = () => {
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
+    setShowMobileChat(true);
+  };
+
+  const handleBackToList = () => {
+    setShowMobileChat(false);
   };
 
   const sendMessage = () => {
@@ -192,11 +198,19 @@ const Chat = () => {
     }
   };
 
+  const handleKeyDown = (event) => {  
+    if (event.key === 'Enter') {  
+      event.preventDefault();  
+      sendMessage();  
+    }  
+  };  
+
   return (
-    <div className="flex">
-      <div className="w-[30%] border-r-2">
-        <h2 className="font-medium text-3xl text-gray-800 mb-8">Chat Admin</h2>
-        <div className="flex flex-col h-[500px] overflow-y-scroll hidden_scroll ">
+    <div className="flex w-full">
+      {/* User List - Hidden on mobile when chat is shown */}
+      <div className={`w-full sm:w-[30%] sm:border-r-2 ${showMobileChat ? 'hidden sm:block' : 'block'}`}>
+        <h2 className="font-medium text-lg md:text-3xl text-gray-800 my-5">Chat Admin</h2>
+        <div className="flex flex-col h-[500px] overflow-y-scroll hidden_scroll">
           {listUser.map((user) => (
             <div
               key={user.id}
@@ -209,27 +223,37 @@ const Chat = () => {
                 <img
                   src={assets.avatar_woman}
                   alt="avatar"
-                  className="w-12 h-12"
+                  className="w-8 h-8 md:w-12 md:h-12"
                 />
                 <div className="flex items-center">
-                  <p className="font-medium text-black text-lg">{user.name}</p>
+                  <p className="font-medium text-black sm:text-base lg:text-lg">{user.name}</p>
                 </div>
               </div>
-              <hr className=" w-[90%] m-auto border-gray-300" />
+              <hr className="w-[90%] m-auto border-gray-300" />
             </div>
           ))}
         </div>
       </div>
-      <div className="w-[70%]">
-        {/* Chat Interface */}
-        <div className="flex-grow flex flex-col">
+
+      {/* Chat Interface - Show on mobile only when a user is selected */}
+      <div className={`w-full sm:w-[70%] ${showMobileChat ? 'block' : 'hidden sm:block'}`}>
+        <div className="flex-grow flex flex-col h-[calc(100vh-66px)]">
           {selectedUser ? (
             <>
-              {/* Chat Header */}
-              <div className=" p-4 border-b border-gray-200 flex items-center">
+              {/* Chat Header with Back Button */}
+              <div className="py-4 sm:p-4 border-b border-gray-200 flex items-center">
+                {showMobileChat && (
+                  <button 
+                    onClick={handleBackToList}
+                    className="mr-1 px-2 sm:hidden"
+                  >
+                    <img src={assets.exit_icon} alt="" className="w-5 h-5"/>
+                  </button>
+                )}
                 <img
                   src={assets.avatar_woman}
                   className="w-10 h-10 rounded-full mr-4"
+                  alt="avatar"
                 />
                 <div>
                   <h2 className="font-semibold text-gray-800">
@@ -239,26 +263,22 @@ const Chat = () => {
               </div>
 
               {/* Messages Container */}
-              <div className="h-[480px] w-full overflow-y-auto p-4 space-y-4 hidden_scroll" ref={messagesContainerRef}>
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 hidden_scroll" ref={messagesContainerRef}>
                 {messages.map((msg, index) => (
                   <div
                     key={index}
-                    className={`flex flex-col w-full
-                    ${
+                    className={`flex flex-col w-full ${
                       msg.sender === "admin"
                         ? "self-end items-end float-end"
                         : "self-start items-start float-start"
-                    }  
-                  `}
+                    }`}
                   >
                     <div
-                      className={`px-4 py-2 rounded-lg  max-w-[70%] 
-                      ${
+                      className={`px-4 py-2 rounded-lg max-w-[70%] ${
                         msg.sender === "admin"
                           ? "bg-pink-500 text-white"
                           : "bg-gray-200 text-gray-800"
-                      }  
-                    `}
+                      }`}
                     >
                       {msg.message}
                     </div>
@@ -271,21 +291,21 @@ const Chat = () => {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 border-t border-gray-200 flex items-center space-x-2">
+              <div className="p-4 border-t border-gray-200 flex items-center space-x-2 mb-2 relative">
                 <input
                   type="text"
                   placeholder="Nhập tin nhắn..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  className="flex-grow px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
+                  onKeyDown={handleKeyDown}
+                  className="w-full flex-grow px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-200"
                 />
-                <button onClick={sendMessage} className="px-4 py-2 rounded-lg ">
-                  <img className="w-8 h-8" src={assets.send_icon} alt="" />
+                <button onClick={sendMessage} className="sm:px-4 sm:py-2">
+                  <img className={`w-8 h-8 relative ${showMobileChat? 'absolute w-6 h-6' : ''}`} src={assets.send_icon} alt="send" />
                 </button>
               </div>
             </>
           ) : (
-            // Màn hình khi chưa chọn user
             <div className="flex-grow flex items-center justify-center bg-gray-50">
               <div className="text-center">
                 <svg

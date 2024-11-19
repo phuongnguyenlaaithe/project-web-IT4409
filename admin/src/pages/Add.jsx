@@ -70,7 +70,7 @@ const Add = ({token}) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-col w-full items-start gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col w-full items-start gap-3 my-8">
         <div>
           <p className="mb-2 ">Upload Image</p>
 
