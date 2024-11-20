@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, useContext } from "react";
+import { ShopContext } from '../../context/ShopContext';
 import { io } from "socket.io-client";
 import { assets } from "../../assets/assets";
 import moment from "moment";
@@ -6,6 +7,8 @@ import moment from "moment";
 const socket = io("http://localhost:4000"); // Adjust server URL if needed
 
 const ChatBox = () => {
+  const { userId } = useContext(ShopContext);
+
   const [isActive, setIsActive] = useState(false);
   const [enterMessage, setEnterMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -43,8 +46,11 @@ const ChatBox = () => {
 
   // Fetch previous messages and handle real-time messages
   useEffect(() => {
+
+    if (!userId) return;
+
     socket.emit("join", {
-      userId: "6738af64957c4debb2f7235a",
+      userId : userId,
       adminId: "admin",
     }); // Replace with dynamic IDs
 
@@ -60,12 +66,12 @@ const ChatBox = () => {
       socket.off("previousMessages");
       socket.off("privateMessage");
     };
-  }, []);
+  }, [userId]);
 
   const handleSend = useCallback(() => {
     if (enterMessage.length > 0) {
       const newMessage = {
-        sender: "6738af64957c4debb2f7235a", // Replace with actual sender ID
+        sender: userId, // Replace with actual sender ID
         receiver: "admin", // Replace with actual receiver ID
         message: enterMessage,
         timestamp: new Date(),
@@ -114,55 +120,67 @@ const ChatBox = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col h-[82%] sm:h-[78%] p-4 overflow-y-auto gap-2" ref={messagesContainerRef}>
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`mb-1 flex ${
-                msg.sender === "6738af64957c4debb2f7235a"
-                  ? "justify-end"
-                  : "justify-start"
-              }`}
-            >
-              <div
-                className={`${
-                  msg.sender === "6738af64957c4debb2f7235a"
-                    ? "bg-black text-white"
-                    : "bg-gray-200 text-black"
-                } text-base  p-2 rounded max-w-[70%] break-words`}
-              >
-                <p>{msg.message}</p>
-                <span className="text-xs text-gray-400 block mt-1">
-                  {moment(msg.timestamp).format("HH:mm DD-MM")}
-                </span>
+        {userId ? (
+          // Nội dung chat khi đã đăng nhập
+          <>
+            <div className="flex flex-col h-[82%] sm:h-[78%] p-4 overflow-y-auto gap-2" ref={messagesContainerRef}>
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`mb-1 flex ${
+                    msg.sender === userId
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`${
+                      msg.sender === userId
+                        ? "bg-black text-white"
+                        : "bg-gray-200 text-black"
+                    } text-base p-2 rounded max-w-[70%] break-words`}
+                  >
+                    <p>{msg.message}</p>
+                    <span className="text-xs text-gray-400 block mt-1">
+                      {moment(msg.timestamp).format("HH:mm DD-MM")}
+                    </span>
+                  </div>
+                </div>
+              ))}
+              <div ref={messageEndRef} />
+            </div>
+
+            <div className="px-2">
+              <div className="w-full border h-[16%] rounded bg-white mt-3 p-2 flex">
+                <input
+                  value={enterMessage}
+                  onChange={(e) => setEnterMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter your message..."
+                  className="text base border-0 outline-none w-[90%] focus:ring-0 hover:border-gray-300 py-3 sm:py-0"
+                />
+                <div
+                  onClick={handleSend}
+                  className={`flex justify-end items-center w-[10%] ${
+                    isActiveSendButton ? "opacity-100" : "opacity-50"
+                  }`}
+                >
+                  <img
+                    src={assets.send_icon}
+                    className="w-5 h-5 cursor-pointer hover:opacity-60"
+                  />
+                </div>
               </div>
             </div>
-          ))}
-           <div ref={messageEndRef} />
-        </div>
-
-        <div className="px-2">
-          <div className="w-full border h-[16%] rounded bg-white mt-3 p-2 flex">
-            <input
-              value={enterMessage}
-              onChange={(e) => setEnterMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Enter your message..."
-              className="text base border-0 outline-none w-[90%] focus:ring-0 hover:border-gray-300 py-3 sm:py-0"
-            />
-            <div
-              onClick={handleSend}
-              className={`flex justify-end items-center w-[10%] ${
-                isActiveSendButton ? "opacity-100" : "opacity-50"
-              }`}
-            >
-              <img
-                src={assets.send_icon}
-                className="w-5 h-5 cursor-pointer hover:opacity-60"
-              />
-            </div>
+          </>
+        ) : (
+          // Thông báo khi chưa đăng nhập
+          <div className="flex flex-col items-center justify-center h-[82%] sm:h-[78%] p-4">
+            <p className="text-lg text-gray-500 text-center">
+              Vui lòng đăng nhập để sử dụng tính năng chat
+            </p>
           </div>
-        </div>
+        )}
       </div>
       <div
         onClick={onCloseModel}

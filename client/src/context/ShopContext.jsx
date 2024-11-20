@@ -15,6 +15,7 @@ const ShopContextProvider = (props) => {
   const [favouriteItems, setFavouriteItems] = useState([]);
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState('');
+  const [userId, setUserId] = useState('');
   const navigate = useNavigate();
 
   const addToCart = async (itemId, size) => {
@@ -264,6 +265,8 @@ const ShopContextProvider = (props) => {
       setToken(localStorage.getItem('token'));
       getUserCart(localStorage.getItem('token'));
       getFavouriteCart(localStorage.getItem('token'));
+      setUserId(localStorage.getItem('userId'));
+
     }
     if (token) {
       getUserCart(token);
@@ -296,7 +299,9 @@ const ShopContextProvider = (props) => {
     favouriteItems,
     setFavouriteItems,
     getOrderUser,
-    deleteFavorite
+    deleteFavorite,
+    userId,
+    setUserId
   };
 
   return <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>;

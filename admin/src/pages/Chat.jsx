@@ -3,137 +3,16 @@ import { assets } from "../assets/assets";
 import moment from "moment";
 import {io} from 'socket.io-client'; 
 import { backendUrl } from '../App';
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const listUser = [
-  {
-    name: "Nancy Considine II",
-    msg: "quantify digital matrix",
-    id: "1",
-  },
-  {
-    name: "Willie Ebert",
-    msg: "connect multi-byte interface",
-    id: "2",
-  },
-  {
-    name: "Mike Runolfsson",
-    msg: "synthesize mobile circuit",
-    id: "3",
-  },
-  {
-    name: "Eduardo Schroeder Jr.",
-    msg: "compress redundant protocol",
-    id: "4",
-  },
-  {
-    name: "Eula Legros",
-    msg: "program multi-byte monitor",
-    id: "5",
-  },
-  {
-    name: "Howard Stamm",
-    msg: "bypass bluetooth sensor",
-    id: "6",
-  },
-  {
-    name: "Luis Kunze",
-    msg: "back up cross-platform alarm",
-    id: "7",
-  },
-  {
-    name: "Felipe Howe",
-    msg: "copy online interface",
-    id: "8",
-  },
-  {
-    name: "Arlene Beatty",
-    msg: "compress 1080p capacitor",
-    id: "9",
-  },
-  {
-    name: "Alyssa Goyette",
-    msg: "hack optical capacitor",
-    id: "10",
-  },
-  {
-    name: "Dewey Hauck Jr.",
-    msg: "copy solid state port",
-    id: "11",
-  },
-  {
-    name: "Annie Littel V",
-    msg: "bypass solid state bus",
-    id: "12",
-  },
-  {
-    name: "Lucas Lehner",
-    msg: "override cross-platform system",
-    id: "13",
-  },
-  {
-    name: "Megan O'Hara",
-    msg: "calculate neural feed",
-    id: "14",
-  },
-  {
-    name: "Arthur Kuphal",
-    msg: "back up haptic monitor",
-    id: "15",
-  },
-  {
-    name: "Jessie Cronin",
-    msg: "navigate optical pixel",
-    id: "16",
-  },
-  {
-    name: "Jo Marvin",
-    msg: "synthesize auxiliary interface",
-    id: "17",
-  },
-  {
-    name: "Conrad Stamm",
-    msg: "copy optical bandwidth",
-    id: "18",
-  },
-  {
-    name: "Viola Schamberger",
-    msg: "back up cross-platform alarm",
-    id: "19",
-  },
-  {
-    name: "Bill Sawayn",
-    msg: "input wireless microchip",
-    id: "20",
-  },
-  {
-    name: "Van Dickens",
-    msg: "reboot redundant pixel",
-    id: "21",
-  },
-  {
-    name: "Zachary Balistreri",
-    msg: "quantify digital hard drive",
-    id: "22",
-  },
-  {
-    name: "April Christiansen",
-    msg: "input virtual driver",
-    id: "23",
-  },
-  {
-    name: "Terence Mueller",
-    msg: "transmit solid state port",
-    id: "24",
-  },
-];
 
-const Chat = () => {
-  const [selectedUser, setSelectedUser] = useState(listUser[0]);
-  const [users, setUsers] = useState();
+const Chat = ({token}) => {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [socket, setSocket] = useState(null);  
-  const userId = '6738af64957c4debb2f7235a';
   const messageEndRef = useRef(null);  
   const messagesContainerRef = useRef(null);
   const [showMobileChat, setShowMobileChat] = useState(false);
@@ -155,25 +34,72 @@ const Chat = () => {
     scrollToBottom();
   }, [messages, selectedUser]);
 
-  useEffect(() => {  
-    // Kết nối socket  
-    const newSocket = io(backendUrl);  
-    setSocket(newSocket);  
+  const getUserMessage = async () => {
+    try {
+      const res = await axios.get(backendUrl+'/api/chat/get-user', {headers: {token}})
+      if(res.data.success) {
+        setUsers(res.data.users)
+        console.log(res.data.users)
+      }
+    } catch (error) {
+      console.log(error.response.data)
+      toast.error(error.response.message)
+    }
+  }
 
-    newSocket.emit('join', { userId, adminId : 'admin'});
+  useEffect(() => {
+    getUserMessage()
+  },[token])
 
-    newSocket.on('previousMessages', (prevMessages) => {
+  useEffect(() => {
+    if (users.length > 0 && !selectedUser) {
+      setSelectedUser(users[0]);
+    }
+  }, [users]);
+
+  useEffect(() => {
+    const newSocket = io(backendUrl, {
+      query: { token },
+      transports: ['websocket']
+    });
+    
+    setSocket(newSocket);
+
+    return () => {
+      if (newSocket) newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!socket || !selectedUser) return;
+
+    // Join room for selected user
+    socket.emit('join', {
+      userId: selectedUser.userId,
+      adminId: 'admin'
+    });
+
+    // Listen for previous messages
+    socket.on('previousMessages', (prevMessages) => {
       setMessages(prevMessages);
     });
 
-    newSocket.on('privateMessage', (newMessage) => {
-      setMessages((prev) => [...prev, newMessage]);
+    // Listen for new messages
+    socket.on('privateMessage', (newMsg) => {
+      setMessages(prev => [...prev, newMsg]);
+    });
+
+    // Request previous messages
+    socket.emit('getPreviousMessages', {
+      userId: selectedUser.userId,
+      adminId: 'admin'
     });
 
     return () => {
-      newSocket.disconnect();
+      socket.off('previousMessages');
+      socket.off('privateMessage');
     };
-  }, [userId]);  
+  }, [socket, selectedUser]);
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
@@ -188,7 +114,7 @@ const Chat = () => {
     if (newMessage.trim() && socket) {
       const messageData = {  
         sender: 'admin',  
-        receiver: userId,  
+        receiver: selectedUser.userId ,  
         message: newMessage,  
         timestamp: new Date()  
       };  
@@ -211,12 +137,12 @@ const Chat = () => {
       <div className={`w-full sm:w-[30%] sm:border-r-2 ${showMobileChat ? 'hidden sm:block' : 'block'}`}>
         <h2 className="font-medium text-lg md:text-3xl text-gray-800 my-5">Chat Admin</h2>
         <div className="flex flex-col h-[500px] overflow-y-scroll hidden_scroll">
-          {listUser.map((user) => (
+          {users.map((user) => (
             <div
-              key={user.id}
+              key={user.userId}
               onClick={() => handleSelectUser(user)}
               className={`cursor-pointer px-3 rounded-sm ${
-                selectedUser?.id === user.id ? "bg-pink-100" : ""
+                selectedUser?.userId === user.userId ? "bg-pink-100" : ""
               }`}
             >
               <div className="flex gap-3 w-full py-3 mb-2">
@@ -226,7 +152,7 @@ const Chat = () => {
                   className="w-8 h-8 md:w-12 md:h-12"
                 />
                 <div className="flex items-center">
-                  <p className="font-medium text-black sm:text-base lg:text-lg">{user.name}</p>
+                  <p className="font-medium text-black sm:text-base lg:text-lg">{user.username}</p>
                 </div>
               </div>
               <hr className="w-[90%] m-auto border-gray-300" />
@@ -257,7 +183,7 @@ const Chat = () => {
                 />
                 <div>
                   <h2 className="font-semibold text-gray-800">
-                    {selectedUser.name}
+                    {selectedUser.username}
                   </h2>
                 </div>
               </div>
