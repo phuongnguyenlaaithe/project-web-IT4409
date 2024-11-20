@@ -1,4 +1,5 @@
 import ChatMessage from '../models/chatModel.js';
+import userModel from '../models/userModel.js';
 
 const handleConnection = (socket, io) => {
   //   console.log('a user connected');
@@ -35,11 +36,15 @@ const handleConnection = (socket, io) => {
   //   });
 };
 
-// get the list of users who have chatted with the admin
+// get the list of users who have chatted with the admin and return their usernames
 const getUsers = async (req, res) => {
   try {
     const users = await ChatMessage.distinct('sender', { receiver: "admin" });
-    res.json({ success: true, users });
+    const usersWithNames = await Promise.all(users.map(async (userId) => {
+      const user = await userModel.findById(userId); 
+      return { userId, username: user.name };
+    }));
+    res.json({ success: true, users: usersWithNames });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
