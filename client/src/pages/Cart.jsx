@@ -72,12 +72,6 @@ const Cart = () => {
               />
               <div className="flex">
                 <img
-                  onClick={() => addToFavourite(item._id)}
-                  className="w-6 mr-6 sm:w-6 cursor-pointer"
-                  src={assets.favoriteIcon}
-                  alt=""
-                />
-                <img
                   onClick={() => updateQuantity(item._id, item.size, 0)}
                   className="w-4 mr-4 sm:w-5 cursor-pointer"
                   src={assets.bin_icon}
