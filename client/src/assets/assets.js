@@ -79,7 +79,7 @@ import cancel_icon from './cancel_icon.png'
 import send_icon from './send_icon.png'
 import arrow_left from './arrow_left.png'
 import momo_payment from './MoMo.png'
-
+import package_icon from './package_icon.png'
 
 export const assets = {
     logo,
@@ -109,6 +109,7 @@ export const assets = {
     message_icon,
     arrow_left,
     momo_payment,
+    package_icon,
     p_img2_1, p_img2_2, p_img2_3, p_img2_4
 }
 
