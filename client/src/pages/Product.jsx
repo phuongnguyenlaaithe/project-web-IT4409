@@ -72,7 +72,7 @@ const Product = () => {
                 <button
                   onClick={() => setSize(item)}
                   key={index}
-                  className={`border py-2 px-4 bg-gray-100 ${item === size ? 'bg-orange-400' : ''}`}
+                  className={`border py-2 px-4 bg-gray-100 hover:border-orange-400 ${item === size ? 'bg-orange-400' : ''}`}
                 >
                   {item}
                 </button>

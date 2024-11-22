@@ -39,7 +39,6 @@ const Chat = ({token}) => {
       const res = await axios.get(backendUrl+'/api/chat/get-user', {headers: {token}})
       if(res.data.success) {
         setUsers(res.data.users)
-        console.log(res.data.users)
       }
     } catch (error) {
       console.log(error.response.data)
