@@ -107,7 +107,7 @@ const ChatBox = () => {
 
   return (
     <div className="fixed bottom-0 right-0  sm:bottom-10 sm:right-10">
-      <div className="w-full sm:w-[364px] sm:mb-16 rounded-xl relative h-screen sm:h-[532px] shadow-lg bg-white">
+      <div className="w-screen sm:w-[364px] sm:mb-16 rounded-xl relative h-screen sm:h-[532px] shadow-lg bg-white">
         <div className="h-14 flex justify-center items-center bg-black w-full sm:rounded-t-xl ">
           <p className="text-white text-base font-bold text-center">Forever</p>
           <div
