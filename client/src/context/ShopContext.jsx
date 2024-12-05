@@ -118,6 +118,7 @@ const ShopContextProvider = (props) => {
         if (responsive.data?.success) {
           setFavouriteItems([responsive.data.favouriteProduct, ...favouriteItems]);
           toast.success('Successfully added this product to your favourite');
+          getFavouriteCart();
         } else {
           toast.error(responsive.data?.message);
         }
@@ -255,7 +256,7 @@ const ShopContextProvider = (props) => {
   };
 
 
-  console.log(favouriteItems);
+  // console.log(favouriteItems);
   useEffect(() => {
     getProductsData();
   }, []);
