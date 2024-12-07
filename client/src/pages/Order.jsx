@@ -42,7 +42,7 @@ const Order = () => {
                 // src={item.image[0]}
                 // alt={item.name}
                 // src={order.items[0].image[0]}
-                src={order.items.length > 1 ? BoxImage : order.items[0]?.image[0] || BoxImage}
+                src={BoxImage}
                 alt={order.items.length > 1 ? "Package" : order.items[0]?.name || "Product"}
                 className="w-20 h-30 object-cover rounded mr-2"
               />
