@@ -132,15 +132,9 @@ const Order = () => {
               <h3 className="text-lg font-bold">Shipping Address</h3>
               <div className="mt-2">
                 <p>
-                  {selectedOrder.address.firstName}{" "}
-                  {selectedOrder.address.lastName}
+                  {selectedOrder.address.name}
                 </p>
-                <p>{selectedOrder.address.street}</p>
-                <p>
-                  {selectedOrder.address.city}, {selectedOrder.address.state},{" "}
-                  {selectedOrder.address.zipcode}
-                </p>
-                <p>{selectedOrder.address.country}</p>
+                <p>{selectedOrder.address.address}</p>
                 <p>Phone: {selectedOrder.address.phone}</p>
               </div>
             </div>
