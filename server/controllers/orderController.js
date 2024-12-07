@@ -8,7 +8,7 @@ const momoConfig = {
     accessKey: process.env.MOMO_ACCESS_KEY,
     secretKey: process.env.MOMO_SECRET_KEY,
     endpoint: 'https://test-payment.momo.vn/v2/gateway/api/create',
-    returnUrl: 'https://project-web-it4409-backend.onrender.com/order',
+    returnUrl: 'https://project-web-it4409-frontend.onrender.com/order',
     notifyUrl: 'https://project-web-it4409-backend.onrender.com/api/order/verify'
 };
 
