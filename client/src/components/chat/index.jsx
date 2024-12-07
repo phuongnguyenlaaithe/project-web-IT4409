@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { assets } from "../../assets/assets";
 import moment from "moment";
 
-const socket = io("http://localhost:4000"); // Adjust server URL if needed
+const socket = io("https://project-web-it4409-backend.onrender.com"); // Adjust server URL if needed
 
 const ChatBox = () => {
   const { userId } = useContext(ShopContext);

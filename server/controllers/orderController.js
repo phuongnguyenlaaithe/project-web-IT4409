@@ -8,8 +8,8 @@ const momoConfig = {
     accessKey: process.env.MOMO_ACCESS_KEY,
     secretKey: process.env.MOMO_SECRET_KEY,
     endpoint: 'https://test-payment.momo.vn/v2/gateway/api/create',
-    returnUrl: 'http://localhost:5173/order',
-    notifyUrl: 'https://a67e-2a09-bac1-7aa0-50-00-245-8.ngrok-free.app/api/order/verify'
+    returnUrl: 'https://project-web-it4409-backend.onrender.com/order',
+    notifyUrl: 'https://project-web-it4409-backend.onrender.com/api/order/verify'
 };
 
 // Placing orders using COD Method
