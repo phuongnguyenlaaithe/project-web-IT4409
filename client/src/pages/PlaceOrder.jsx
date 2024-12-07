@@ -129,7 +129,7 @@ const PlaceOrder = () => {
           value={formData.email}
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           type="email"
-          placeholder="Email address"
+          placeholder="Email"
         />
         <input
           required
@@ -138,7 +138,7 @@ const PlaceOrder = () => {
           value={formData.address}
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           type="text"
-          placeholder="Street"
+          placeholder="Address"
         />
       
         <div>
