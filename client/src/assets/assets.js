@@ -79,7 +79,7 @@ import cancel_icon from './cancel_icon.png'
 import send_icon from './send_icon.png'
 import arrow_left from './arrow_left.png'
 import momo_payment from './MoMo.png'
-import momo_payment2 from './momo_icon_rectangle_whitebg_RGB.png'
+import momo_payment2 from './momo2.png'
 import package_icon from './package_icon.png'
 import heart_icon from './heart-solid.svg'
 

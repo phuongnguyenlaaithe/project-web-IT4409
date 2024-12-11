@@ -42,7 +42,7 @@ const Order = () => {
                 // src={item.image[0]}
                 // alt={item.name}
                 // src={order.items[0].image[0]}
-                src={order.items.length > 1 ? BoxImage : order.items[0]?.image[0] || BoxImage}
+                src={BoxImage}
                 alt={order.items.length > 1 ? "Package" : order.items[0]?.name || "Product"}
                 className="w-20 h-30 object-cover rounded mr-2"
               />
@@ -132,15 +132,9 @@ const Order = () => {
               <h3 className="text-lg font-bold">Shipping Address</h3>
               <div className="mt-2">
                 <p>
-                  {selectedOrder.address.firstName}{" "}
-                  {selectedOrder.address.lastName}
+                  {selectedOrder.address.name}
                 </p>
-                <p>{selectedOrder.address.street}</p>
-                <p>
-                  {selectedOrder.address.city}, {selectedOrder.address.state},{" "}
-                  {selectedOrder.address.zipcode}
-                </p>
-                <p>{selectedOrder.address.country}</p>
+                <p>{selectedOrder.address.address}</p>
                 <p>Phone: {selectedOrder.address.phone}</p>
               </div>
             </div>
