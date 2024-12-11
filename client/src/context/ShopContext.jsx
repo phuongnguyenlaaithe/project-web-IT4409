@@ -47,7 +47,7 @@ const ShopContextProvider = (props) => {
     if (token) {
       try {
         await axios.post(backendUrl + '/api/cart/add', { itemId, size }, { headers: { token } });
-        toast.success('Successfully added this product to your cart');
+        toast.success('🛒 add to cart success');
       } catch (error) {
         console.log(error);
         toast.error(error.message);
@@ -117,7 +117,7 @@ const ShopContextProvider = (props) => {
         );
         if (responsive.data?.success) {
           setFavouriteItems([responsive.data.favouriteProduct, ...favouriteItems]);
-          toast.success('Successfully added this product to your favourite');
+          toast('💖 add to favorites success');
           getFavouriteCart();
         } else {
           toast.error(responsive.data?.message);
@@ -240,7 +240,6 @@ const ShopContextProvider = (props) => {
 
   const getOrderUser = async (token) => {
     try {
-      console.log(token);
       const response = await axios.get(backendUrl + `/api/order/userorders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
