@@ -17,8 +17,7 @@ const Orders = ({token}) => {
 
     try {
       const res = await axios.get(backendUrl + '/api/order/list',{ headers: { token } })
-
-      if(res.statusText === 'OK') {
+      if(res.status === 200) {
         const ordersData = res.data.reverse();
         setOrders(ordersData);
       } else {
