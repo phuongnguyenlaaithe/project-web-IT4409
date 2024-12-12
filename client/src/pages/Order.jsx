@@ -9,7 +9,7 @@ const Order = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    getOrderUser(localStorage.getItem("token")).then((r) => setOrders(r));
+    getOrderUser(localStorage.getItem("token")).then((r) => setOrders(r.reverse()));
   }, []);
 
   const openModal = (order) => {
