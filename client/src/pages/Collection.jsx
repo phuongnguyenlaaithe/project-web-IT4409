@@ -69,6 +69,7 @@ const Collection = () => {
 
   useEffect(() => {
     applyFilter();
+    setCurrentPage(1);
   }, [category, subCategory, search, showSearch, products]);
 
   useEffect(() => {
