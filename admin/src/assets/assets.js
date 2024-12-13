@@ -12,6 +12,7 @@ import avatar_woman from './woman.png'
 import send_icon from './send-message.png'
 import exit_icon from './exit.png'
 import profile_icon from './profile.png'
+import search_icon from './search_icon.png'
 
 export const assets = {
     logo,
@@ -27,6 +28,7 @@ export const assets = {
     avatar_woman,
     send_icon,
     exit_icon,
-    profile_icon
+    profile_icon,
+    search_icon,
 }
 

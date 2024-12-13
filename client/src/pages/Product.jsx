@@ -1,16 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { ShopContext } from '../context/ShopContext';
-import { assets } from '../assets/assets';
-import RelatedProducts from '../components/RelatedProducts';
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
+import { assets } from "../assets/assets";
+import RelatedProducts from "../components/RelatedProducts";
 
 const Product = () => {
   const { id } = useParams();
-  const { products, currency, addToCart, addToFavourite } = useContext(ShopContext);
+  const { products, currency, addToCart, addToFavourite, favouriteItems, deleteFavorite } =
+    useContext(ShopContext);
 
   const [product, setProduct] = useState(false);
-  const [image, setImage] = useState('');
-  const [size, setSize] = useState('');
+  const [image, setImage] = useState("");
+  const [size, setSize] = useState("");
+  const [isFavourite, setIsFavourite] = useState(false);
 
   const fetchData = async () => {
     products.map((item) => {
@@ -22,9 +24,29 @@ const Product = () => {
     });
   };
 
+  const checkFavorite = async () => {
+    setIsFavourite(false);
+    favouriteItems.map((item) => {
+      if (item._id === id) {
+        setIsFavourite(true);
+      }
+    });
+  };
+
+  const handleFavourite = async () => {
+    if(isFavourite) {
+      await deleteFavorite(product._id);
+      setIsFavourite(false);
+    } else {
+      await addToFavourite(product._id);
+      setIsFavourite(true);
+    }
+  }
+
   useEffect(() => {
     fetchData();
-    setSize('');
+    checkFavorite();
+    setSize("");
     window.scrollTo(0, 0);
   }, [id, products]);
 
@@ -72,7 +94,9 @@ const Product = () => {
                 <button
                   onClick={() => setSize(item)}
                   key={index}
-                  className={`border py-2 px-4 bg-gray-100 hover:border-orange-400 ${item === size ? 'bg-orange-400' : ''}`}
+                  className={`border py-2 px-4 bg-gray-100 hover:border-orange-400 ${
+                    item === size ? "bg-orange-400" : ""
+                  }`}
                 >
                   {item}
                 </button>
@@ -87,10 +111,21 @@ const Product = () => {
               ADD TO CART
             </button>
             <button
-              onClick={() => addToFavourite(product._id)}
-              className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+              onClick={() => {handleFavourite()}}
+              className="border-black border px-6 py-1 text-sm"
             >
-              ADD TO FAVOURITE
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                height="26"
+                width="30"
+                fill={isFavourite ? `#FF204E` : `white`}
+                stroke="black"
+                strokeWidth="12"
+              >
+                {" "}
+                <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+              </svg>
             </button>
           </div>
           <hr className="my-8 sm:w-4/5" />
@@ -110,21 +145,27 @@ const Product = () => {
 
         <div className="flex flex-col gap-4 border p-5 text-sm text-gray-500 ">
           <p>
-            An e-commerce website is an online platform that facilitates the buying and selling of products or services
-            over the internet. It serves as a virtual marketplace where businesses and individuals can showcase their
-            products, interact with customers, and conduct transactions without the need for a physical presence.
-            E-commerce websites have gained immense popularity due to their convenience, accessibility, and the global
-            reach they offer.
+            An e-commerce website is an online platform that facilitates the
+            buying and selling of products or services over the internet. It
+            serves as a virtual marketplace where businesses and individuals can
+            showcase their products, interact with customers, and conduct
+            transactions without the need for a physical presence. E-commerce
+            websites have gained immense popularity due to their convenience,
+            accessibility, and the global reach they offer.
           </p>
           <p>
-            E-commerce websites typically display products or services along with detailed descriptions, images, prices,
-            and any available variations (e.g., sizes, colors). Each product usually has its own dedicated page with
-            relevant information.
+            E-commerce websites typically display products or services along
+            with detailed descriptions, images, prices, and any available
+            variations (e.g., sizes, colors). Each product usually has its own
+            dedicated page with relevant information.
           </p>
         </div>
       </div>
 
-      <RelatedProducts category={product.category} subCategory={product.subCategory} />
+      <RelatedProducts
+        category={product.category}
+        subCategory={product.subCategory}
+      />
     </div>
   ) : (
     <div className="opacity-0"></div>

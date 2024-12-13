@@ -3,6 +3,7 @@ import { ShopContext } from '../../context/ShopContext';
 import { io } from "socket.io-client";
 import { assets } from "../../assets/assets";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const socket = io("https://project-web-it4409-backend.onrender.com"); // Adjust server URL if needed
 
@@ -98,9 +99,7 @@ const ChatBox = () => {
           className="w-8 h-auto fill-white scale-90"
           src={assets.message_icon}
         />
-        <p className="hidden sm:flex text-white text-[10px] font-bold">
-          Trò chuyện
-        </p>
+        <p className="hidden sm:flex text-white text-[14px] font-bold">Chat box</p>
       </div>
     );
   }
@@ -177,7 +176,7 @@ const ChatBox = () => {
           // Thông báo khi chưa đăng nhập
           <div className="flex flex-col items-center justify-center h-[82%] sm:h-[78%] p-4">
             <p className="text-lg text-gray-500 text-center">
-              Vui lòng đăng nhập để sử dụng tính năng chat
+              Please <strong className="underline"> <Link to='/login'>login </Link></strong> to use chat feature
             </p>
           </div>
         )}

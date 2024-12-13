@@ -9,7 +9,6 @@ const BestSeller = () => {
 
   useEffect(() => {
     const bestProduct = products.filter((item) => item.bestseller);
-    console.log(bestProduct)
     setBestSeller(bestProduct.sort((a, b) => a.date - b.date).slice(0, 10));
   }, [products]);
 

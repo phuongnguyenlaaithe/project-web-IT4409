@@ -2,12 +2,15 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { backendUrl, currency } from '../App';
 import { toast } from 'react-toastify';
+import { assets } from '../assets/assets';
 import Pagination from '../components/Pagination';
 
 const List = ({token}) => {
   const [list, setList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [search, setSearch] = useState('');
+  const [filterList, setFilterList] = useState([]);
 
   const fetchList = async () => {
     try {
@@ -47,9 +50,26 @@ const List = ({token}) => {
     fetchList();
   }, []);
 
+  const applyFilter = () => {
+    let ordersCopy = list.slice();
+
+    if (search) {
+      ordersCopy = ordersCopy.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+    }
+
+    setFilterList(ordersCopy);
+  };
+  
+  useEffect(() => {
+    if (list.length > 0) {
+      applyFilter();
+      setCurrentPage(1);
+    }
+  }, [list, search]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = list.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filterList.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -63,8 +83,20 @@ const List = ({token}) => {
 
   return (
     <div className='my-8'>
-      <div className='flex justify-between items-center mb-4'>
+      <div className='flex flex-col sm:flex-row gap-2 justify-between items-center mb-4'>
         <p>All Products List</p>
+        <div>
+          <div className="inline-flex items-center justify-center border border-gray-400 px-5 py-2 rounded-full">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 outline-none bg-inherit text-sm border-none"
+              type="text"
+              placeholder="Search"
+            />
+            <img className="w-4" src={assets.search_icon} alt="" />
+          </div>
+        </div>
       </div>
 
       <div className='flex flex-col gap-2'>
@@ -89,15 +121,15 @@ const List = ({token}) => {
       </div>
 
       {/* Pagination */}
-      {list.length > 0 && (
+      {filterList.length > 0 && (
         <Pagination 
         currentPage={currentPage}
         onPageChange={handlePageChange}
         itemsPerPage={itemsPerPage}
         onItemsPerPageChange={handleItemsPerPageChange}
-        totalItems={list.length}
+        totalItems={filterList.length}
         currentPageFirstItem={indexOfFirstItem + 1}
-        currentPageLastItem={Math.min(indexOfLastItem, list.length)}
+        currentPageLastItem={Math.min(indexOfLastItem, filterList.length)}
       />
       )}
     </div>

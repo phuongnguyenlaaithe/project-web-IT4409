@@ -9,7 +9,7 @@ const Order = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    getOrderUser(localStorage.getItem("token")).then((r) => setOrders(r));
+    getOrderUser(localStorage.getItem("token")).then((r) => setOrders(r.reverse()));
   }, []);
 
   const openModal = (order) => {
@@ -34,7 +34,7 @@ const Order = () => {
           // order.items.map(item => 
           <div
             key={order._id}
-            className="p-4 bg-white shadow rounded-md flex justify-between items-center"
+            className="p-4 bg-white shadow rounded-md flex flex-col sm:flex-row justify-between items-center"
             style={{ minWidth: "400px" }}
           >
             <div className="flex items-center" style={{ width: "400px" }}>
@@ -66,15 +66,17 @@ const Order = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center">
-              <div style={{ fontSize: '50px', color: 'green', marginRight: '8px' }}>&bull;</div><span style={{ color: 'black' }}>{order.status}</span>
+            <div className="flex justify-between w-full sm:w-[36%] items-center">
+              <div className="flex items-center">
+                <div style={{ fontSize: '50px', color: 'green', marginRight: '8px' }}>&bull;</div><span style={{ color: 'black' }}>{order.status}</span>
+              </div>
+              <button
+                onClick={() => openModal(order)}
+                className="border text-black px-4 py-2 rounded shadow hover:bg-gray-100"
+              >
+                Track Order
+              </button>
             </div>
-            <button
-              onClick={() => openModal(order)}
-              className="border text-black px-4 py-2 rounded shadow hover:bg-gray-100"
-            >
-              Track Order
-            </button>
           </div>
         ))
           // )

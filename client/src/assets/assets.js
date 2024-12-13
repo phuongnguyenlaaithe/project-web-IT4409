@@ -81,6 +81,7 @@ import arrow_left from './arrow_left.png'
 import momo_payment from './MoMo.png'
 import momo_payment2 from './momo2.png'
 import package_icon from './package_icon.png'
+import heart_icon from './heart-solid.svg'
 
 export const assets = {
     logo,
@@ -110,6 +111,7 @@ export const assets = {
     momo_payment,
     momo_payment2,
     package_icon,
+    heart_icon,
     p_img2_1, p_img2_2, p_img2_3, p_img2_4
 }
 

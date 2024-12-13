@@ -219,7 +219,7 @@ const Chat = ({token}) => {
               <div className="p-4 border-t border-gray-200 flex items-center space-x-2 mb-2 relative">
                 <input
                   type="text"
-                  placeholder="Nhập tin nhắn..."
+                  placeholder="Enter your message..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
