@@ -24,13 +24,9 @@ const Product = () => {
     });
   };
 
-  const checkFavorite = async () => {
-    setIsFavourite(false);
-    favouriteItems.map((item) => {
-      if (item._id === id) {
-        setIsFavourite(true);
-      }
-    });
+  const checkFavorite = () => {
+    const isFavorite = favouriteItems.some(item => item._id === id);
+    setIsFavourite(isFavorite);
   };
 
   const handleFavourite = async () => {
@@ -48,7 +44,7 @@ const Product = () => {
     checkFavorite();
     setSize("");
     window.scrollTo(0, 0);
-  }, [id, products]);
+  }, [id, products, favouriteItems]);
 
   return product ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
